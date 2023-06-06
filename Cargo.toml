@@ -1,5 +1,5 @@
 [package]
-name = "clipty_backend"
+name = "actix_websocket_sever"
 version = "0.1.0"
 edition = "2021"
 
