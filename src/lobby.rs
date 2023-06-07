@@ -90,20 +90,19 @@ impl Handler<Connect> for Lobby {
 impl Handler<ClientActorMessage> for Lobby {
     type Result = ();
 
-    fn handle(&mut self, msg: ClientActorMessage, _: &mut Context<Self>) -> Self::Result {
+    fn handle(&mut self, mut msg: ClientActorMessage, _: &mut Context<Self>) -> Self::Result {
+        let sendable = msg.to_json_string();
         if msg.msg.starts_with("\\w") {
             if let Some(id_to) = msg.msg.split(' ').collect::<Vec<&str>>().get(1) {
-                // #TODO check
-                // if it's a
-                // valid uuid
-                self.send_message(&msg.msg, &Uuid::parse_str(id_to).unwrap());
+                // #TODO check if it's a valid uuid
+                self.send_message(&sendable, &Uuid::parse_str(id_to).unwrap());
             }
         } else {
             self.rooms
                 .get(&msg.room_id)
                 .unwrap()
                 .iter()
-                .for_each(|client| self.send_message(&msg.msg, client));
+                .for_each(|client| self.send_message(&sendable, client));
         }
     }
 }

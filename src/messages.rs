@@ -1,4 +1,5 @@
 use actix::prelude::{Message, Recipient};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 //WsConn responds to this to pipe it through to the actual client
@@ -23,11 +24,34 @@ pub struct Disconnect {
     pub id: Uuid,
 }
 
+#[derive(Serialize, Deserialize)]
+pub enum MessageEvent {
+    NewClip,
+    LatestClips,
+}
+
 //client sends this to the lobby for the lobby to echo out.
-#[derive(Message)]
+#[derive(Message, Serialize, Deserialize)]
 #[rtype(result = "()")]
 pub struct ClientActorMessage {
     pub id: Uuid,
+    pub event: MessageEvent,
     pub msg: String,
     pub room_id: Uuid,
+}
+
+impl ClientActorMessage {
+    pub fn to_json_string(&mut self) -> String {
+        serde_json::json!({
+            "event": self.event,
+            "msg": self.msg,
+            "id": self.id,
+            "room_id": self.room_id
+        })
+        .to_string()
+    }
+
+    pub fn new(val: &str) -> Result<ClientActorMessage, serde_json::Error> {
+        serde_json::from_str::<ClientActorMessage>(val)
+    }
 }

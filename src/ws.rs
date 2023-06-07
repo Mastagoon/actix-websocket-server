@@ -99,11 +99,17 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsConn {
                 ctx.stop();
             }
             Ok(ws::Message::Nop) => (),
-            Ok(ws::Message::Text(s)) => self.lobby_addr.do_send(ClientActorMessage {
-                id: self.id,
-                msg: s,
-                room_id: self.room,
-            }),
+            Ok(ws::Message::Text(s)) => match ClientActorMessage::new(&s) {
+                Ok(m) => self.lobby_addr.do_send(ClientActorMessage {
+                    id: self.id,
+                    msg: m.msg,
+                    room_id: self.room,
+                    event: m.event,
+                }),
+                Err(e) => {
+                    println!("Error making a new sendable {e}");
+                }
+            },
             Err(e) => panic!("{e}"),
         }
     }
