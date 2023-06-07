@@ -316,6 +316,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix_websocket_sever"
+version = "0.1.0"
+dependencies = [
+ "actix",
+ "actix-web",
+ "actix-web-actors",
+ "serde",
+ "serde_json",
+ "tokio 1.28.2",
+ "uuid",
+]
+
+[[package]]
 name = "adler"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -478,19 +491,6 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-
-[[package]]
-name = "actix_websocket_sever"
-version = "0.1.0"
-dependencies = [
- "actix",
- "actix-web",
- "actix-web-actors",
- "serde",
- "serde_json",
- "tokio 1.28.2",
- "uuid",
-]
 
 [[package]]
 name = "const_fn"
